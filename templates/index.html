@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Comparador de Archivos CSV</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Comparador de Archivos CSV</h1>
+      <form
+        id="uploadForm"
+        action="/"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <label for="file1">Archivo 1:</label>
+        <input type="file" name="file1" id="file1" required />
+        <br /><br />
+        <label for="file2">Archivo 2:</label>
+        <input type="file" name="file2" id="file2" required />
+        <br /><br />
+        <button type="submit">Comparar Archivos</button>
+        <button type="button" id="limpiarBtn">Limpiar</button>
+      </form>
+
+      {% if resultado %}
+      <h2 id="resultadosTitulo">Resultados de la Comparación</h2>
+      <table id="resultadosTabla">
+        <tr>
+          <th>Fila</th>
+          <th>Name dia7</th>
+          <th>Email dia7</th>
+          <th>Name bobo</th>
+          <th>Email bobo</th>
+          <th>Diferencia</th>
+          <th>Email Formateado</th>
+        </tr>
+        {% for fila in resultado %}
+        <tr>
+          <td>{{ fila.fila }}</td>
+          <td>{{ fila.name_dia7 }}</td>
+          <td>{{ fila.email_dia7 }}</td>
+          <td>{{ fila.name_bobo }}</td>
+          <td>{{ fila.email_bobo }}</td>
+          <td>{{ fila.diferencia }}</td>
+          <td>{{ fila.email_formateado|safe }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+    </div>
+
+    <script>
+      // Función para limpiar todo
+      function limpiarTodo() {
+        const form = document.getElementById("uploadForm");
+        const resultadosTabla = document.getElementById("resultadosTabla");
+        const resultadosTitulo = document.getElementById("resultadosTitulo");
+
+        // Limpiar los campos del formulario
+        form.reset();
+        document.getElementById("file1").value = "";
+        document.getElementById("file2").value = "";
+
+        // Ocultar la tabla de resultados si existe
+        if (resultadosTabla) resultadosTabla.style.display = "none";
+        if (resultadosTitulo) resultadosTitulo.style.display = "none";
+      }
+
+      // Manejar el botón de limpiar
+      document
+        .getElementById("limpiarBtn")
+        .addEventListener("click", limpiarTodo);
+
+      // Verificar si hay resultados al cargar la página
+      window.addEventListener("load", () => {
+        const resultadosTabla = document.getElementById("resultadosTabla");
+        const resultadosTitulo = document.getElementById("resultadosTitulo");
+
+        // Si no hay resultados, limpiar todo
+        if (!resultadosTabla || resultadosTabla.rows.length <= 1) {
+          limpiarTodo();
+        }
+      });
+    </script>
+  </body>
+</html>
